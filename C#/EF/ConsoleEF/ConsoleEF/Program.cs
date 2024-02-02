@@ -15,7 +15,7 @@ namespace ConsoleEF
                 // создаем два объекта User
                 User user2 = new User { Name = "Иван" };
                 user2.ChatId = 113333343;
-                user2.Wishes.Add(new Wish("Телефон")
+                user2.Wishes!.Add(new Wish("Телефон")
                 {
                     Description = "Хочу красивый телефон",
                 });
@@ -32,9 +32,9 @@ namespace ConsoleEF
                 Console.WriteLine("Users list:");
                 foreach(var u in users)
                 {
-                    if(u.Wishes.Count != 0)
+                    if(u.Wishes!.Count != 0)
                     {
-                        Console.WriteLine($"{u.Id}.{u.Name} - {u.Wishes.FirstOrDefault().Name} {u.Wishes.FirstOrDefault().Description}");
+                        Console.WriteLine($"{u.Id}.{u.Name} - {u.Wishes.FirstOrDefault()!.Name} {u.Wishes.FirstOrDefault()!.Description}");
                     }
                     else
                     {
