@@ -7,23 +7,23 @@ namespace ConsoleEF
     {
         static void Main(string[] args)
         {
-            AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
-            // добавление данных
-            using(ApplicationContext db = new ApplicationContext())
-            {
+            //AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
+            //// добавление данных
+            //using(ApplicationContext db = new ApplicationContext())
+            //{
 
-                // создаем два объекта User
-                User user2 = new User { Name = "Иван" };
-                user2.ChatId = 113333343;
-                user2.Wishes!.Add(new Wish("Телефон")
-                {
-                    Description = "Хочу красивый телефон",
-                });
+            //    // создаем два объекта User
+            //    User user2 = new User { Name = "Иван" };
+            //    user2.ChatId = 113333343;
+            //    user2.Wishes!.Add(new Wish("Телефон")
+            //    {
+            //        Description = "Хочу красивый телефон",
+            //    });
 
-                // добавляем их в бд
-                db.Users.AddRange( user2);
-                db.SaveChanges();
-            }
+            //    // добавляем их в бд
+            //    db.Users.AddRange( user2);
+            //    db.SaveChanges();
+            //}
             //получение данных
             using(ApplicationContext db = new ApplicationContext())
             {
