@@ -35,7 +35,7 @@
         /// <summary>
         /// Свойство, которое хранит дату выбора желания
         /// </summary>
-        public DateTime? ChosenDate { get; set; } = DateTime.Now;
+        public DateTime ChosenDate { get; set; } = DateTime.Now;
 
         /// <summary>
         /// Свойство, которое хранит дату исполнения желания
