@@ -11,7 +11,6 @@ namespace ConsoleTelegram
     {
         Dictionary<long, ChatMode> dict = new Dictionary<long, ChatMode>();
         MyWishListFactory myListWish = new MyWishListFactory();
-        MapGenerator mapGen = new MapGenerator();
 
         static async Task Main(string[] args)
         {
@@ -24,8 +23,6 @@ namespace ConsoleTelegram
             };
 
             botClient.StartReceiving(updateHandler: program.Handler, pollingErrorHandler: program.HandleErrorAsync, receiverOptions: ro);
-
-
             Console.WriteLine("Стартовали");
             Console.ReadLine();
         }
@@ -64,6 +61,7 @@ namespace ConsoleTelegram
             {
                 dict.Add(update.Message!.Chat.Id, ChatMode.Initial);
             }
+           
 
             state = dict[update.Message!.Chat.Id];
             switch(state)
@@ -79,26 +77,29 @@ namespace ConsoleTelegram
                             await myListWish.LookMenuWishList(client, update, ct);
                             break;
                         default:
-                            await myListWish.LookStartMenu(client, update, ct);
+                            await myListWish.LookStartMenu(client, update.Message, ct);
                             break;
                     }
                     break;
                 case ChatMode.AddWisn:
                     if(update.Message.Text == "❌ Отмена")
                     {
+                        await myListWish.RemoveKeyboard(client, update.Message, ct);
                         await client.DeleteMessageAsync(
                                 chatId: update.Message!.Chat.Id,
                                 messageId: update.Message!.MessageId,
-                                cancellationToken: ct
-                                );
+                                cancellationToken: ct);
+                        await client.DeleteMessageAsync(
+                                  chatId: update.Message!.Chat.Id,
+                                  messageId: myListWish.historyChat[update.Message!.Chat.Id],
+                                  cancellationToken: ct);
                         await myListWish.LookMenuWishList(client, update, ct);
-                        dict[update.Message!.Chat.Id] = ChatMode.Initial;
                     }
                     else
                     {
-                        await myListWish.LookMenuWishList(client, update, ct);
                         await myListWish.AddWish(client, update, ct);
                     }
+                    dict[update.Message!.Chat.Id] = ChatMode.Initial;
                     break;
                 case ChatMode.GetWishOther:
                     break;
@@ -111,50 +112,47 @@ namespace ConsoleTelegram
 
 
 
+        /// <param name="client"></param>
+        /// <param name="callbackQuery"></param>
+        /// <param name="ct"></param>
+        /// <returns></returns>
         private async Task BotOnCallbackQueryReceived(ITelegramBotClient client, CallbackQuery callbackQuery, CancellationToken ct)
         {
             if(callbackQuery != null)
             {
-                switch(callbackQuery.Data)
+                //subs[0] - command
+                //subs[n] - переменные
+                string[] subs = callbackQuery.Data!.Split(",");
+                switch(subs[0])
                 {
                     case "/addwish":
-                        await AddWish(client, callbackQuery, ct);
+                        await myListWish.InputAddWish(client, callbackQuery, ct);
                         dict[callbackQuery.Message!.Chat.Id] = ChatMode.AddWisn;
-                        //dict[update.Message!.Chat.Id] = ChatMode.WisnListOther;
                         break;
                     case "/deletewish":
-                        //await 
+                        if(subs.Count() == 1)
+                        {
+                            await myListWish.LookDeleteWish(client, callbackQuery, ct);
+                        }
+                        else
+                        {
+                            await myListWish.DeleteWish(client, callbackQuery, ct, subs);
+                        }
+                       
+                       // dict[callbackQuery.Message!.Chat.Id] = ChatMode.DeleteWish;
+                        break;
+                    case "/lookMenu":
+                        await myListWish.LookStartMenu(client, callbackQuery.Message!, ct);
+                        dict[callbackQuery.Message!.Chat.Id] = ChatMode.Initial;
                         break;
                     default:
-                        //await SendMenu(client, update);
+                        await myListWish.LookStartMenu(client, callbackQuery.Message!, ct);
                         break;
                 }
             }
         }
 
-        private async Task AddWish(ITelegramBotClient client, CallbackQuery callbackQuery, CancellationToken ct)
-        {
-            await client.DeleteMessageAsync(
-                chatId: callbackQuery.Message!.Chat.Id,
-                messageId: callbackQuery.Message!.MessageId,
-                cancellationToken: ct
-                );
-
-            var replyKeyboardMarkup = new ReplyKeyboardMarkup(
-               new KeyboardButton[]
-               {
-                    "❌ Отмена"
-               })
-            {
-                ResizeKeyboard = true,
-            };
-
-            await client.SendTextMessageAsync(
-                        chatId: callbackQuery.Message!.Chat.Id,
-                        text: "Введите желание:\r\n\r\n(Укажите краткое название, позже можно будеть добавить описание)",
-                        replyMarkup: replyKeyboardMarkup,
-                        cancellationToken: ct);
-        }
+       
 
 
 
@@ -174,6 +172,7 @@ namespace ConsoleTelegram
 
         private Task Process(ITelegramBotClient client, Update update, CancellationToken ct)
         {
+
             throw new NotImplementedException();
         }
 

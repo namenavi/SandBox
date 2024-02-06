@@ -4,7 +4,7 @@
     {
         Initial = 0,
         AddWisn = 1,
-        //WisnListOther = 2,
+        DeleteWish = 2,
         GetWishOther = 10,
         Profile = 20
     }
