@@ -132,11 +132,11 @@ namespace ConsoleTelegram
                     case "/deletewish":
                         if(subs.Count() == 1)
                         {
-                            await myListWish.LookDeleteWish(client, callbackQuery, ct);
+                            await myListWish.LookDeleteListWish(client, callbackQuery, ct);
                         }
                         else
                         {
-                            await myListWish.DeleteWish(client, callbackQuery, ct, subs);
+                            await myListWish.LookDeleteWish(client, callbackQuery, ct, subs);
                         }
                        
                        // dict[callbackQuery.Message!.Chat.Id] = ChatMode.DeleteWish;
