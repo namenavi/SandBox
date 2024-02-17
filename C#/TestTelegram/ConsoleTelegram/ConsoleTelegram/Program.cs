@@ -1,9 +1,7 @@
-﻿using System;
-using Telegram.Bot;
+﻿using Telegram.Bot;
 using Telegram.Bot.Polling;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.Enums;
-using Telegram.Bot.Types.ReplyMarkups;
 
 namespace ConsoleTelegram
 {
@@ -62,7 +60,6 @@ namespace ConsoleTelegram
                 dict.Add(update.Message!.Chat.Id, ChatMode.Initial);
             }
            
-
             state = dict[update.Message!.Chat.Id];
             switch(state)
             {
@@ -129,7 +126,7 @@ namespace ConsoleTelegram
                         await myListWish.InputAddWish(client, callbackQuery, ct);
                         dict[callbackQuery.Message!.Chat.Id] = ChatMode.AddWisn;
                         break;
-                    case "/deletewish":
+                    case "/deletewishs":
                         if(subs.Count() == 1)
                         {
                             await myListWish.LookDeleteListWish(client, callbackQuery, ct);
@@ -140,6 +137,10 @@ namespace ConsoleTelegram
                         }
                        
                        // dict[callbackQuery.Message!.Chat.Id] = ChatMode.DeleteWish;
+                        break;
+                    case "/deletewish":
+                        await myListWish.DeleteWish(client, callbackQuery, ct, subs);;
+                        //dict[callbackQuery.Message!.Chat.Id] = ChatMode.AddWisn;
                         break;
                     case "/lookMenu":
                         await myListWish.LookStartMenu(client, callbackQuery.Message!, ct);

@@ -59,7 +59,7 @@ namespace ConsoleTelegram
                     new []
                     {
                         InlineKeyboardButton.WithCallbackData(text: "➕ Добавить желание", callbackData: "/addwish"),
-                        InlineKeyboardButton.WithCallbackData(text: "➖ Удалить желание", callbackData: "/deletewish"),
+                        InlineKeyboardButton.WithCallbackData(text: "➖ Удалить желание", callbackData: "/deletewishs"),
                     },
                     new []
                     {
@@ -162,7 +162,7 @@ namespace ConsoleTelegram
             {
                 buttonRows.Add(new[]
                 {
-                    InlineKeyboardButton.WithCallbackData(text:$"{counter}) {wish.Name}" , callbackData: $"/deletewish,{wish.Id}")
+                    InlineKeyboardButton.WithCallbackData(text:$"{counter}) {wish.Name}" , callbackData: $"/deletewishs,{wish.Id}")
                 });
                 counter++;
             }
@@ -183,23 +183,42 @@ namespace ConsoleTelegram
 
         public async Task LookDeleteWish(ITelegramBotClient client, CallbackQuery callbackQuery, CancellationToken ct, string[] subs)
         {
+            var wish = wishList[callbackQuery.Message!.Chat.Id]
+                        .Where(t => t.Id.ToString() == subs[1]).FirstOrDefault();
             InlineKeyboardMarkup inlineKeyboard = new(new[]
                {
                     new []
                     {
-                        InlineKeyboardButton.WithCallbackData(text: "☑️ Удалить", callbackData: "/addwish"),
+                        InlineKeyboardButton.WithCallbackData(text: "☑️ Удалить", callbackData: $"/deletewish,{wish!.Id}"),
                         InlineKeyboardButton.WithCallbackData(text: "↩️ Назад", callbackData: "/lookMenu"),
                     }
                 });
+
             await client.EditMessageTextAsync(
                          chatId: callbackQuery.Message!.Chat.Id,
                          messageId: callbackQuery.Message.MessageId,
                          text: $"➖ Удаление желания:\r\n\r\nВы уверены," +
                          $" что хотите удалить желание " +
-                         $"`{wishList[callbackQuery.Message!.Chat.Id]
-                         .Where(t => t.Id.ToString() == subs[1])}`?",
+                         $"`{wish.Name}`?",
                          replyMarkup: inlineKeyboard,
                          cancellationToken: ct);
+        }
+
+        public async Task DeleteWish(ITelegramBotClient client, CallbackQuery callbackQuery, CancellationToken ct, string[] subs)
+        {
+            var wish = wishList[callbackQuery.Message!.Chat.Id]
+                        .Where(t => t.Id.ToString() == subs[1]).FirstOrDefault();
+            var res = wishList[callbackQuery.Message!.Chat.Id].Remove(wish!);
+            if (!res)
+            {
+                return;
+            }
+            await client.SendTextMessageAsync(
+            chatId: callbackQuery.Message!.Chat.Id,
+            text: $"✅ Желание <{wish!.Name}> удалено!",
+            replyMarkup: new ReplyKeyboardRemove(),
+            cancellationToken: ct);
+            await LookDeleteListWish(client, callbackQuery, ct);
         }
     }
 }
