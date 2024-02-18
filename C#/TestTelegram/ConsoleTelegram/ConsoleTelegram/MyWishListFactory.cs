@@ -3,6 +3,8 @@ using Telegram.Bot;
 using Telegram.Bot.Types.ReplyMarkups;
 using System.Threading;
 using System.Text;
+using Telegram.Bot.Types.InlineQueryResults;
+using System.Collections.Generic;
 
 namespace ConsoleTelegram
 {
@@ -94,7 +96,7 @@ namespace ConsoleTelegram
                     new[]
                     {
                         ["✨ Посмотреть список друга"],
-                        new KeyboardButton[] { "📜 Мой список", "👻 Профиль:" },
+                        new KeyboardButton[] { "📜 Мой список", "👻 Профиль" },
                     })
             {
                 ResizeKeyboard = true
@@ -102,15 +104,11 @@ namespace ConsoleTelegram
             await bot.SendTextMessageAsync(chatId: message.Chat.Id,
                                                   text: "Этот бот поможет вам поделиться списком желаний с друзьями! ⚡️\r\n\r\n1. создавайте список желаний\r\n2. отправляйте ссылку друзьям\r\n" +
                                                   "3. выбранные друзьями желания автоматически удалятся из списка\r\n\r\nИспользование бота бесплатно!\r\n\r\nКак создать список желаний?\r\n\r\n" +
-                                                  "Все просто: выбирайте Мой список в основном меню и добавляйте желания!\r\n\r\nМы добавили опцию неисчезающего желания: " +
-                                                  "если одно и то же желания может выбрать несколько человек. Например, “донат на квартиру”. Для этого выберите опцию Многоразовый при создании желания." +
-                                                  " Рядом с таким желанием в списке появится 🔒.\r\n\r\nПеред списком вы можете добавить приветствие для друзей: указать дату праздника, написать, " +
-                                                  "что хотите получить больше всего, пожелать им классного дня.\r\n\r\nКак поделиться списком с друзьями?\r\n\r\nПерейдите в ваш Профиль из основного меню, " +
+                                                  "Все просто: выбирайте Мой список в основном меню и добавляйте желания!\r\n\r\nКак поделиться списком с друзьями?\r\n\r\nПерейдите в ваш Профиль из основного меню, " +
                                                   "скопируйте ссылку на список и отправьте его друзьям. Также посмотреть список можно введя номер списка в Посмотреть чужой список.\r\n\r\nКак выбрать желание из списка друга?\r\n\r\n" +
                                                   "Откройте список желаний друга (по ссылке или найдите его по номеру), изучите список — он может занимать несколько страниц. Нажимайте «Листать», чтобы увидеть следующую страницу. " +
-                                                  "Нажмите \"Вычеркнуть желание\" и подтвердите выбор. Готово!\r\n\r\nЕсли рядом с названием желания стоит замочек🔒, то такое желание нельзя вычеркнуть — оно многоразовое. " +
-                                                  "То есть такое желание могут выбрать неограниченное количество пользователей. Оно не пропадает из списка.\r\n\r\n💡 Совет!\r\n\r\nМаксимально подробно описывайте ваше желание: " +
-                                                  "вы можете прикрепить ссылку и указать цену. Так вашим друзьям будет легче определиться с выбором!",
+                                                  "Нажмите \"Вычеркнуть желание\" и подтвердите выбор. Готово!\r\n\r\n💡 Совет!\r\n\r\n" +
+                                                  "Вы можете прикрепить ссылку и указать цену. Так вашим друзьям будет легче определиться с выбором!",
                                                   replyMarkup: replyKeyboardMarkup,
                                                   cancellationToken: ct);
         }
@@ -209,7 +207,7 @@ namespace ConsoleTelegram
             var wish = wishList[callbackQuery.Message!.Chat.Id]
                         .Where(t => t.Id.ToString() == subs[1]).FirstOrDefault();
             var res = wishList[callbackQuery.Message!.Chat.Id].Remove(wish!);
-            if (!res)
+            if(!res)
             {
                 return;
             }
@@ -219,6 +217,154 @@ namespace ConsoleTelegram
             replyMarkup: new ReplyKeyboardRemove(),
             cancellationToken: ct);
             await LookDeleteListWish(client, callbackQuery, ct);
+        }
+
+        public async Task LookProfile(ITelegramBotClient client, Update update, CancellationToken ct)
+        {
+            ReplyKeyboardMarkup replyKeyboardMarkup = new(
+                    new[]
+                    {
+                        ["✨ Посмотреть список друга"],
+                        new KeyboardButton[] { "📜 Мой список", "👻 Профиль" },
+                    })
+            {
+                ResizeKeyboard = true
+            };
+            await client.SendTextMessageAsync(chatId: update.Message!.Chat.Id,
+                                                  text: $"👻 Профиль:\r\n\r\nTelegram ID - {update.Message.From!.Id}\r\nTelegram логин - @{update.Message.From.Username}\r\n\r\n🔗 Ссылка на список желаний - https://t.me/WishListMasterBot?start={update.Message.From.Id}\r\n\r\nОтправьте друзьям ссылку, чтобы они могли посмотреть ваш список.",
+                                                  replyMarkup: replyKeyboardMarkup,
+                                                  cancellationToken: ct);
+        }
+
+        public async Task LookWishListMenuAnother(ITelegramBotClient client, Update update, CancellationToken ct)
+        {
+            InlineKeyboardMarkup inlineKeyboard = new(new[]
+               {
+                    new []
+                    {
+                        InlineKeyboardButton.WithCallbackData(text: "@ Логин", callbackData: "/seatch_L"),
+                    }, new []
+                    {
+                        InlineKeyboardButton.WithCallbackData(text: "📞 Телефон", callbackData: "/seatch_T"),
+                    },
+                     new []
+                    {
+                        InlineKeyboardButton.WithCallbackData(text: "🏡 Перейти в главное меню", callbackData: "/lookMenu"),
+                    }
+                });
+            await client.SendTextMessageAsync(
+                        chatId: update.Message!.Chat.Id,
+                        text: "Здесь можно поискать списки желаний твоих знакомых! 🔍\r\n\r\n" +
+                        "Выбери способ поиска с помощью кнопок ниже ⤵️\r\n\r\n" +
+                        "или прикрепи контакт пользователя из телефонной книги с помощью скрепочки прямо сейчас 📎",
+                        replyMarkup: inlineKeyboard,
+                        cancellationToken: ct);
+        }
+
+        public async Task LookWishListAnother(ITelegramBotClient client, Update update, CancellationToken ct)
+        {
+            var contact = update.Message!.Contact;
+            if(contact!.UserId != null)
+            {
+                var listWish = wishList[contact.UserId.Value];
+                if(listWish.Count != 0)
+                {
+                    var sb = new StringBuilder();
+                    sb.AppendLine($"Вот список желаний пользователя {contact.FirstName}:");
+                    // Создать счетчик для нумерации желаний
+                    int counter = 1;
+
+                    foreach(Wish wish in listWish)
+                    {
+                        sb.AppendLine(counter + ") " + wish.Name);
+                        counter++;
+                    }
+
+                    InlineKeyboardMarkup inlineKeyboard = new(new[]
+                    {
+                        new []
+                        {
+                            InlineKeyboardButton.WithCallbackData(text: "🎁 Исполнить одно из желаний", callbackData: $"/looklistwishs,{contact.UserId.Value}"),
+                        },
+                        new []
+                        {
+                            InlineKeyboardButton.WithCallbackData(text: "🏡 Перейти в главное меню", callbackData: "/lookMenu"),
+                        }
+                    });
+                    await client.SendTextMessageAsync(
+                                chatId: update.Message!.Chat.Id,
+                                text: sb.ToString(),
+                                replyMarkup: inlineKeyboard,
+                                cancellationToken: ct);
+                    return;
+
+                }
+            }
+
+            await client.SendTextMessageAsync(
+                        chatId: update.Message!.Chat.Id,
+                        text: "Не нашел ни одного желания этого пользователя 😔\r\n\r\n" +
+                        "Попробуй поискать другим способом или расскажи пользователю о боте!" +
+                        "\r\n\r\nПусть скорее заполняет свой список желаний!",
+                        cancellationToken: ct);
+        }
+        public async Task LookWishListAnotherButton(ITelegramBotClient client, Update update, CancellationToken ct)
+        {
+            var contact = update.Message!.Contact;
+            if(contact!.UserId != null)
+            {
+                var listWish = wishList[contact.UserId.Value];
+                if(listWish.Count != 0)
+                {
+
+                    var sb = new StringBuilder();
+                    sb.AppendLine("Вот ваш список желаний:");
+                    // Создать счетчик для нумерации желаний
+                    int counter = 1;
+
+                    foreach(Wish wish in list)
+                    {
+                        sb.AppendLine(counter + ") " + wish.Name);
+                        counter++;
+                    }
+
+                    var buttonRows = new List<InlineKeyboardButton[]>();
+                    var counter = 1;
+
+                    foreach(var wish in listWish)
+                    {
+                        buttonRows.Add(new[]
+                        {
+                            InlineKeyboardButton.WithCallbackData(text:$"{counter}) {wish.Name}" , callbackData: $"/looklistwishs,{contact.UserId.Value}")
+                        });
+                        counter++;
+                    }
+
+                    buttonRows.Add(new[]
+                    {
+                        InlineKeyboardButton.WithCallbackData(text: "↩️ Назад", callbackData: "/lookMenu")
+                    });
+                }
+
+            }
+
+            await client.SendTextMessageAsync(
+                        chatId: update.Message!.Chat.Id,
+                        text: "Не нашел ни одного желания этого пользователя 😔\r\n\r\n" +
+                        "Попробуй поискать другим способом или расскажи пользователю о боте!" +
+                        "\r\n\r\nПусть скорее заполняет свой список желаний!",
+                        cancellationToken: ct);
+
+
+
+
+            InlineKeyboardMarkup inlineKeyboard = new InlineKeyboardMarkup(buttonRows);
+            await client.EditMessageTextAsync(
+                         chatId: update.Message!.Chat.Id,
+                         messageId: update.Message.MessageId,
+                         text: "➖ Удаление желания:\r\n\r\nНажмите на желание для удаления:",
+                         replyMarkup: inlineKeyboard,
+                         cancellationToken: ct);
         }
     }
 }
