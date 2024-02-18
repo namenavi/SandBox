@@ -6,6 +6,7 @@ using System.Text;
 using Telegram.Bot.Types.InlineQueryResults;
 using System.Collections.Generic;
 using System.Reflection.Emit;
+using ConsoleTelegram.ConsoleEF;
 
 namespace ConsoleTelegram
 {
@@ -13,6 +14,13 @@ namespace ConsoleTelegram
     {
         public Dictionary<long, int> historyChat = new();
         public Dictionary<long, List<Wish>> wishList = new();
+        private ApplicationContext db;
+
+        public MyWishListFactory(ApplicationContext db)
+        {
+            this.db=db;
+        }
+
         public async Task LookMenuWishList(ITelegramBotClient client, Update update, CancellationToken ct)
         {
             if(!wishList.TryGetValue(update.Message!.Chat.Id, out var list))

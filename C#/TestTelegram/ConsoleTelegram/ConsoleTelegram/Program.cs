@@ -1,4 +1,5 @@
-﻿using Telegram.Bot;
+﻿using ConsoleTelegram.ConsoleEF;
+using Telegram.Bot;
 using Telegram.Bot.Polling;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.Enums;
@@ -8,21 +9,26 @@ namespace ConsoleTelegram
     public class Program
     {
         Dictionary<long, ChatMode> dict = new Dictionary<long, ChatMode>();
-        MyWishListFactory myListWish = new MyWishListFactory();
+        static MyWishListFactory myListWish;
 
         static async Task Main(string[] args)
         {
-            Program program = new Program();
-            var botClient = new TelegramBotClient("");
-            await botClient.DeleteWebhookAsync();
-            var ro = new ReceiverOptions
+            using(ApplicationContext db = new ApplicationContext())
             {
-                AllowedUpdates = Array.Empty<UpdateType>(),
-            };
+                myListWish = new MyWishListFactory(db);
+                Program program = new Program();
+                var botClient = new TelegramBotClient("");
+                await botClient.DeleteWebhookAsync();
+                var ro = new ReceiverOptions
+                {
+                    AllowedUpdates = Array.Empty<UpdateType>(),
+                };
 
-            botClient.StartReceiving(updateHandler: program.Handler, pollingErrorHandler: program.HandleErrorAsync, receiverOptions: ro);
-            Console.WriteLine("Стартовали");
-            Console.ReadLine();
+                botClient.StartReceiving(updateHandler: program.Handler, pollingErrorHandler: program.HandleErrorAsync, receiverOptions: ro);
+                Console.WriteLine("Стартовали");
+                Console.ReadLine();
+            }
+                
         }
         async Task Handler(ITelegramBotClient client, Update update, CancellationToken ct)
         {
