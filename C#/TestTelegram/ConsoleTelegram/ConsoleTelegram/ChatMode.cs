@@ -1,6 +1,6 @@
 ﻿namespace ConsoleTelegram
 {
-    enum ChatMode
+    public enum ChatMode
     {
         Initial = 0,
         AddWisn = 1,

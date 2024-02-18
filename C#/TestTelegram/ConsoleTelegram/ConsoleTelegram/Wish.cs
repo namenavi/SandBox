@@ -8,7 +8,7 @@
         public Guid Id { get; set; }
 
         /// <summary>
-        /// Свойство, которое хранит название желания
+        /// Свойство, которое хранит краткое название желания
         /// </summary>
         public string Name { get; set; }
 
@@ -32,7 +32,7 @@
         /// <summary>
         /// Свойство, которое хранит дату выбора желания
         /// </summary>
-        public DateTime ChosenDate { get; set; } = DateTime.Now;
+        public DateTime? ChosenDate { get; set; } = DateTime.Now;
 
         /// <summary>
         /// Свойство, которое хранит дату исполнения желания
@@ -44,9 +44,9 @@
         /// </summary>
         public int? Rating { get; set; }
         /// <summary>
-        /// Свойство хранит описание желания
+        /// Свойство хранит полное описание желания
         /// </summary>
-        public string Description { get; set; }
+        public string? Description { get; set; }
 
         /// <summary>
         /// Конструктор, который принимает название желания

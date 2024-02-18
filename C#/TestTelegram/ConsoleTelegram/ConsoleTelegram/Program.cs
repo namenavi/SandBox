@@ -28,7 +28,7 @@ namespace ConsoleTelegram
                 Console.WriteLine("Стартовали");
                 Console.ReadLine();
             }
-                
+
         }
         async Task Handler(ITelegramBotClient client, Update update, CancellationToken ct)
         {
@@ -82,7 +82,7 @@ namespace ConsoleTelegram
                 case MessageType.Location:
                     break;
                 case MessageType.Contact:
-                   await BotOnMessageContactReceived(client, update, ct);
+                    await BotOnMessageContactReceived(client, update, ct);
                     break;
                 case MessageType.Venue:
                     break;
@@ -159,7 +159,7 @@ namespace ConsoleTelegram
                 default:
                     break;
             }
-            
+
         }
 
         private async Task BotOnMessageContactReceived(ITelegramBotClient client, Update update, CancellationToken ct)
@@ -253,7 +253,8 @@ namespace ConsoleTelegram
                         }
                         break;
                     case "/deletewish":
-                        await myListWish.DeleteWish(client, callbackQuery, ct, subs);;
+                        await myListWish.DeleteWish(client, callbackQuery, ct, subs);
+                        ;
                         break;
                     case "/lookMenu":
                         await myListWish.LookStartMenu(client, callbackQuery.Message!, ct);
@@ -266,7 +267,7 @@ namespace ConsoleTelegram
             }
         }
 
-       
+
 
 
 

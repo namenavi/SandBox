@@ -58,12 +58,11 @@ namespace ConsoleTelegram
                 modelBuilder.Entity<User>()
                     .HasKey(u => u.Id); // Указание первичного ключа
                 modelBuilder.Entity<User>()
-                    .Property(u => u.Name) // Указание свойства имени
-                    .IsRequired() // Обязательное поле
+                    .Property(u => u.UserName) // Указание свойства имени
                     .HasMaxLength(50); // Ограничение длины
                 modelBuilder.Entity<User>()
-                    .HasIndex(u => u.Name) // Указание индекса по имени
-                   .IsUnique(); // Уникальное значение
+                    .HasIndex(u => u.UserName) // Указание индекса по имени
+                    .IsUnique(); // Уникальное значение
                 modelBuilder.Entity<User>()
                    .Property(u => u.ChatId) // Указание свойства идентификатора чата
                    .IsRequired(); // Обязательное поле
