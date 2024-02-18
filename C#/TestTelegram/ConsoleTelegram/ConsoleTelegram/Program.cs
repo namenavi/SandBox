@@ -54,8 +54,6 @@ namespace ConsoleTelegram
 
         private async Task BotOnMessageReceived(ITelegramBotClient client, Update update, CancellationToken ct)
         {
-
-            
             switch(update.Message!.Type)
             {
                 case MessageType.Unknown:
@@ -247,12 +245,9 @@ namespace ConsoleTelegram
                         {
                             await myListWish.LookDeleteWish(client, callbackQuery, ct, subs);
                         }
-                       
-                       // dict[callbackQuery.Message!.Chat.Id] = ChatMode.DeleteWish;
                         break;
                     case "/deletewish":
                         await myListWish.DeleteWish(client, callbackQuery, ct, subs);;
-                        //dict[callbackQuery.Message!.Chat.Id] = ChatMode.AddWisn;
                         break;
                     case "/lookMenu":
                         await myListWish.LookStartMenu(client, callbackQuery.Message!, ct);

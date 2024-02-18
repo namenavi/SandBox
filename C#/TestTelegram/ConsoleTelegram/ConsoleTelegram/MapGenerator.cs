@@ -39,7 +39,7 @@ namespace ConsoleTelegram
 
         private static async Task SendSetLong(ITelegramBotClient client, Update update, MapGenState state, CancellationToken ct)
         {
-            var lonText = update.Message.Text;
+            var lonText = update.Message!.Text;
             if(lonText == null || !double.TryParse(lonText, out var lon))
             {
                 await client.SendTextMessageAsync(

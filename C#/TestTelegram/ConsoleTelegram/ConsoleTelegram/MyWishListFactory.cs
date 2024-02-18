@@ -5,6 +5,7 @@ using System.Threading;
 using System.Text;
 using Telegram.Bot.Types.InlineQueryResults;
 using System.Collections.Generic;
+using System.Reflection.Emit;
 
 namespace ConsoleTelegram
 {
@@ -77,11 +78,8 @@ namespace ConsoleTelegram
         }
         public async Task AddWish(ITelegramBotClient client, Update update, CancellationToken ct)
         {
-            wishList[update.Message!.Chat.Id].Add(
-                new Wish()
-                {
-                    Name = update.Message.Text!
-                });
+            wishList[update.Message!.Chat.Id]
+                .Add(new Wish(update.Message.Text!));
             await client.SendTextMessageAsync(
             chatId: update.Message!.Chat.Id,
             text: $"✅ Желание <{update.Message.Text}> добавлено!",
@@ -284,7 +282,7 @@ namespace ConsoleTelegram
                     {
                         new []
                         {
-                            InlineKeyboardButton.WithCallbackData(text: "🎁 Исполнить одно из желаний", callbackData: $"/looklistwishs,{contact.UserId.Value}"),
+                            InlineKeyboardButton.WithCallbackData(text: "🎁 Выбрать одно из желаний", callbackData: $"/looklistwishs,{contact.UserId.Value}"),
                         },
                         new []
                         {
@@ -316,18 +314,6 @@ namespace ConsoleTelegram
                 var listWish = wishList[contact.UserId.Value];
                 if(listWish.Count != 0)
                 {
-
-                    var sb = new StringBuilder();
-                    sb.AppendLine("Вот ваш список желаний:");
-                    // Создать счетчик для нумерации желаний
-                    int counter = 1;
-
-                    foreach(Wish wish in list)
-                    {
-                        sb.AppendLine(counter + ") " + wish.Name);
-                        counter++;
-                    }
-
                     var buttonRows = new List<InlineKeyboardButton[]>();
                     var counter = 1;
 
@@ -354,17 +340,6 @@ namespace ConsoleTelegram
                         "Попробуй поискать другим способом или расскажи пользователю о боте!" +
                         "\r\n\r\nПусть скорее заполняет свой список желаний!",
                         cancellationToken: ct);
-
-
-
-
-            InlineKeyboardMarkup inlineKeyboard = new InlineKeyboardMarkup(buttonRows);
-            await client.EditMessageTextAsync(
-                         chatId: update.Message!.Chat.Id,
-                         messageId: update.Message.MessageId,
-                         text: "➖ Удаление желания:\r\n\r\nНажмите на желание для удаления:",
-                         replyMarkup: inlineKeyboard,
-                         cancellationToken: ct);
         }
     }
 }
