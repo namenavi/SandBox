@@ -2,18 +2,18 @@
 using TL;
 using WTelegram;
 
-namespace TestTLSharpTG
+namespace TestWTelegram
 {
     internal class Program
     {
         static string Config(string what)
         {
             if(what == "api_id")
-                return "";
+                return Environment.GetEnvironmentVariable("api_id", EnvironmentVariableTarget.Machine)!;
             if(what == "api_hash")
-                return "";
+                return Environment.GetEnvironmentVariable("api_hash", EnvironmentVariableTarget.Machine)!;
             if(what == "phone_number")
-                return "";
+                return Environment.GetEnvironmentVariable("phone_number", EnvironmentVariableTarget.Machine)!;
             if(what == "verification_code")
                 return Console.ReadLine()!; // let WTelegramClient ask the user with a console prompt 
             if(what == "first_name")
@@ -49,7 +49,7 @@ namespace TestTLSharpTG
                 Console.ReadKey();
             }
         }
-
+        
         // if not using async/await, we could just return Task.CompletedTask
         private static async Task Client_OnUpdate(UpdatesBase updates)
         {
@@ -125,7 +125,7 @@ namespace TestTLSharpTG
             : peer is PeerChat or PeerChannel ? Chat(peer.ID) : $"Peer {peer.ID}";
 
     }
-    
+
 }
 
 

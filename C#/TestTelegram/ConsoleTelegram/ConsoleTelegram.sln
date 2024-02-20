@@ -5,7 +5,7 @@ VisualStudioVersion = 17.8.34511.84
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ConsoleTelegram", "ConsoleTelegram\ConsoleTelegram.csproj", "{7F5B0B5E-ABBE-4C34-AC55-06C29320353C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestTLSharpTG", "TestTLSharpTG\TestTLSharpTG.csproj", "{702FD5EE-29AB-4D47-A2B4-6CD0E702FC8E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TestWTelegram", "TestWTelegram\TestWTelegram.csproj", "{702FD5EE-29AB-4D47-A2B4-6CD0E702FC8E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

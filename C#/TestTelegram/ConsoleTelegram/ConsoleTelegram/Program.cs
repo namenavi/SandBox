@@ -13,11 +13,16 @@ namespace ConsoleTelegram
 
         static async Task Main(string[] args)
         {
+            string token = Environment.GetEnvironmentVariable("token_bot", EnvironmentVariableTarget.Machine)!;
+            if(token == null)
+            {
+                return;
+            }
             using(ApplicationContext db = new ApplicationContext())
             {
                 myListWish = new MyWishListFactory(db);
                 Program program = new Program();
-                var botClient = new TelegramBotClient("");
+                var botClient = new TelegramBotClient(token);
                 await botClient.DeleteWebhookAsync();
                 var ro = new ReceiverOptions
                 {

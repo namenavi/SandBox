@@ -19,7 +19,9 @@ namespace ConsoleTelegram
 
             protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
             {
-                optionsBuilder.UseNpgsql("Host=localhost;Port=5432;Database=EF;Username=postgres;Password=pass");
+                optionsBuilder.UseNpgsql(
+                    Environment.GetEnvironmentVariable("DefaultConnectionNpgsql"
+                    , EnvironmentVariableTarget.Machine)!);
             }
             protected override void OnModelCreating(ModelBuilder modelBuilder)
             {
