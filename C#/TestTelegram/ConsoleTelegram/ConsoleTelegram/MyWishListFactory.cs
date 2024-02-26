@@ -18,7 +18,7 @@ namespace ConsoleTelegram
 
         public MyWishListFactory(ApplicationContext db)
         {
-            this.db=db;
+            this.db = db;
         }
 
         public async Task LookMenuWishList(ITelegramBotClient client, Update update, CancellationToken ct)
@@ -37,10 +37,6 @@ namespace ConsoleTelegram
                     {
                         InlineKeyboardButton.WithCallbackData(text: "➕ Добавить желание", callbackData: "/addwish"),
                     },
-                    //new []
-                    //{
-                    //    InlineKeyboardButton.WithCallbackData(text: "🔝 Изменить название списка", callbackData: "/refrashnamelist"),
-                    //},
                      new []
                     {
                         InlineKeyboardButton.WithCallbackData(text: "🏡 Перейти в главное меню", callbackData: "/lookMenu"),
