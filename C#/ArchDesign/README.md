@@ -1,8 +1,8 @@
-# Полезные ссылки
+# РџРѕР»РµР·РЅС‹Рµ СЃСЃС‹Р»РєРё
 <details>
-  <summary>Ссылки</summary>
+  <summary>РЎСЃС‹Р»РєРё</summary>
 
-- [Refactoring Guru ВПН нужен](https://refactoring.guru/ru/design-patterns/)
-- [Refactoring Guru Аналог](https://www.lambdatest.com/blog/c-sharp-testing-frameworks/)
+- [Refactoring Guru Р’РџРќ РЅСѓР¶РµРЅ](https://refactoring.guru/ru/design-patterns/)
+- [Refactoring Guru РђРЅР°Р»РѕРі](https://www.lambdatest.com/blog/c-sharp-testing-frameworks/)
 - [Microservice Architecture](https://microservices.io/patterns/index.html)
 </details>
