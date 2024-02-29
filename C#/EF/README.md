@@ -1,6 +1,6 @@
-# Полезные ссылки
+# РџРѕР»РµР·РЅС‹Рµ СЃСЃС‹Р»РєРё
 <details>
-  <summary>Ссылки</summary>
+  <summary>РЎСЃС‹Р»РєРё</summary>
 
 - [METANIT.COM/EF](https://metanit.com/sharp/efcore/7.3.php)
 - []()
