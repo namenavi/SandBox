@@ -1,7 +1,7 @@
-# Полезные ссылки
+# РџРѕР»РµР·РЅС‹Рµ СЃСЃС‹Р»РєРё
 <details>
-  <summary>Ссылки</summary>
+  <summary>РЎСЃС‹Р»РєРё</summary>
 
-- [5 основных инструментов модульного тестирования для C #](https://methodpoet.com/unit-testing-tools/)
+- [5 РѕСЃРЅРѕРІРЅС‹С… РёРЅСЃС‚СЂСѓРјРµРЅС‚РѕРІ РјРѕРґСѓР»СЊРЅРѕРіРѕ С‚РµСЃС‚РёСЂРѕРІР°РЅРёСЏ РґР»СЏ C #](https://methodpoet.com/unit-testing-tools/)
 - [Best C# Testing Frameworks In 2023](https://www.lambdatest.com/blog/c-sharp-testing-frameworks/)
 </details>
